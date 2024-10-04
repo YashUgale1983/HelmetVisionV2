@@ -34,7 +34,27 @@ const createSendToken = (user, statusCode, req, res) => {
 /* REGISTERING A USER */
 export const register = async (req, res) => {
   try {
-    const { name, phoneNumber, uniqueKey, password, address, email } = req.body;
+    const {
+      name,
+      phoneNumber,
+      uniqueKey,
+      password,
+      address,
+      email,
+      emergencyContacts,
+    } = req.body;
+
+    // Validate that emergencyContacts is provided
+    if (
+      !emergencyContacts ||
+      !Array.isArray(emergencyContacts) ||
+      emergencyContacts.length === 0
+    ) {
+      return res.status(400).json({
+        status: "failure",
+        message: "Emergency contacts are required.",
+      });
+    }
 
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
@@ -46,6 +66,7 @@ export const register = async (req, res) => {
       address,
       uniqueKey,
       phoneNumber,
+      emergencyContacts,
     });
 
     const savedUser = await newUser.save();

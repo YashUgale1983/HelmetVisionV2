@@ -135,3 +135,43 @@ async function labelAPI(imageUrl) {
     return { result: "Helmet not detected", allLabels };
   }
 }
+
+// API endpoint to get all instances of a particular user
+// take uniqueKey as the input to check of a user and the instances
+export const getAllInstances = async (req, res) => {
+  const key = req.body.userUniqueKey;
+  try {
+    // Find the user by unique key and populate the instances
+    const user = await User.findOne({ uniqueKey: key }).populate("instances");
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ status: "error", message: "User not found" });
+    }
+
+    // Respond with the user's instances
+    res.status(200).json({ status: "ok", instances: user.instances });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: "error", message: "Server error" });
+  }
+};
+
+// API endpoint to get all the challans for a user using uniqueKey
+export const getAllChallans = async (req, res) => {
+  const key = req.body.userUniqueKey;
+  try {
+    const user = await User.findOne({ uniqueKey: key }).populate("challans");
+    if (!user) {
+      return res
+        .status(404)
+        .json({ status: "error", message: "User not found" });
+    }
+    // Respond with the user's challans
+    res.status(200).json({ status: "ok", instances: user.challans });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: "error", message: "Server error" });
+  }
+};

@@ -13,18 +13,22 @@ const userSchema = new Schema({
     minlength: 4,
     select: false,
   },
-  emergencyContacts: [
-    {
-      name: String,
-      phone: String,
-      relation: String,
-    },
-  ],
-  address: String,
+  emergencyContacts: {
+    type: [
+      {
+        name: { type: String, required: true },
+        phone: { type: String, required: true },
+        relation: { type: String, required: true },
+      },
+    ],
+    required: true,
+  },
+  address: { type: String, required: true },
   email: { type: String, required: true },
   profilePicture: { type: String },
   instances: [{ type: Schema.Types.ObjectId, ref: "Instance" }],
   challans: [{ type: Schema.Types.ObjectId, ref: "Challan" }],
+  createdAt: { type: Date, default: Date.now },
 });
 
 // Instance Schema
@@ -39,6 +43,7 @@ const instanceSchema = new Schema({
   speeding: { type: Boolean, required: true },
   trafficViolationStatus: { type: Boolean, required: true },
   imageUrl: { type: String },
+  createdAt: { type: Date, default: Date.now },
 });
 
 // Challan Schema
@@ -56,6 +61,7 @@ const challanSchema = new Schema({
     enum: ["UPI", "Card", "Netbanking"],
     default: "UPI",
   },
+  createdAt: { type: Date, default: Date.now },
 });
 
 const User = mongoose.model("User", userSchema);
