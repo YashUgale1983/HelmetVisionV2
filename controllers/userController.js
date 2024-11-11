@@ -55,8 +55,8 @@ export const detectLabels = async (req, res) => {
     const instance = new Instance({
       user: user._id,
       helmetStatus: output.result === "Helmet detected",
-      latitude: req.body.latitude,
-      longitude: req.body.longitude,
+      latitude: req.body.latitude || 50, // remove OR part
+      longitude: req.body.longitude || 60, // remove OR part
       speed: req.body.speed || null,
       bikeTilt: req.body.bikeTilt || null,
       speeding: req.body.speed > speedLimit ? true : false,
@@ -139,11 +139,10 @@ async function labelAPI(imageUrl) {
 // API endpoint to get all instances of a particular user
 // take uniqueKey as the input to check of a user and the instances
 export const getAllInstances = async (req, res) => {
-  const key = req.body.userUniqueKey;
+  const key = req.query.userUniqueKey;
   try {
     // Find the user by unique key and populate the instances
     const user = await User.findOne({ uniqueKey: key }).populate("instances");
-
     if (!user) {
       return res
         .status(404)
@@ -160,7 +159,7 @@ export const getAllInstances = async (req, res) => {
 
 // API endpoint to get all the challans for a user using uniqueKey
 export const getAllChallans = async (req, res) => {
-  const key = req.body.userUniqueKey;
+  const key = req.query.userUniqueKey;
   try {
     const user = await User.findOne({ uniqueKey: key }).populate("challans");
     if (!user) {
@@ -173,5 +172,50 @@ export const getAllChallans = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ status: "error", message: "Server error" });
+  }
+};
+
+// API endpoint to check if a user that exists in Kinde Auth also exists in the main DB
+export const userExists = async (req, res) => {
+  const userEmail = req.query.userEmail;
+  try {
+    const user = await User.findOne({ email: userEmail });
+    if (!user) {
+      return res
+        .status(200)
+        .json({ status: "error", message: "User not found" });
+    }
+    res.status(200).json({
+      status: "ok",
+      message: "User found",
+      data: {
+        user,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: "error", message: "Server error" });
+  }
+};
+
+// API endpoint to get emergency contacts of user
+export const emergencyContacts = async (req, res) => {
+  try {
+    const { uniqueKey } = req.body;
+    if (!uniqueKey) {
+      return res.status(400).json({ message: "Unique key is required" });
+    }
+
+    const user = await User.findOne({ uniqueKey }, "emergencyContacts");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const phoneNumbers = user.emergencyContacts.map((contact) => contact.phone);
+    return res.status(200).json({ phoneNumbers });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "An error occurred while retrieving emergency contacts",
+    });
   }
 };

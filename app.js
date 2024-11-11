@@ -13,7 +13,7 @@ app.use(fileUpload());
 app.use(express.json());
 app.use(
   cors({
-    origin: ["https://192.168.0.106:3000", "https://localhost:3000"],
+    origin: ["https://192.168.0.106:3000", "http://localhost:3000"],
     credentials: true, // Allow cookies and authentication headers to be sent
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })

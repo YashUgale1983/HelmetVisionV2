@@ -14,7 +14,7 @@ const createSendToken = (user, statusCode, req, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    secure: true, // if 'true' it ensures that cookie is sent only on an encrypted connection i.e. https // change it in production
+    secure: false, // if 'true' it ensures that cookie is sent only on an encrypted connection i.e. https // change it in production
     httpOnly: true, // this ensures that cookie is not accessed or modified by the browser
     sameSite: "none", // Allow cross-site requests
   };
