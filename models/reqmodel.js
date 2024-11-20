@@ -37,9 +37,13 @@ const instanceSchema = new Schema({
   helmetStatus: { type: Boolean, required: true },
   latitude: { type: Number, required: true },
   longitude: { type: Number, required: true },
-  // acceleration: Number,
+  accelerometerX: { type: Number, required: true },
+  accelerometerY: { type: Number, required: true },
+  accelerometerZ: { type: Number, required: true },
+  gyroX: { type: Number, required: true },
+  gyroY: { type: Number, required: true },
+  gyroZ: { type: Number, required: true },
   speed: Number,
-  bikeTilt: Number,
   speeding: { type: Boolean, required: true },
   trafficViolationStatus: { type: Boolean, required: true },
   imageUrl: { type: String },
@@ -64,8 +68,58 @@ const challanSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+// SensorData Schema
+const sensorDataSchema = new Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User", // Reference to the User model
+    required: true,
+  },
+  accelerometerX: {
+    type: Number,
+    required: true,
+  },
+  accelerometerY: {
+    type: Number,
+    required: true,
+  },
+  accelerometerZ: {
+    type: Number,
+    required: true,
+  },
+  gyroX: {
+    type: Number,
+    required: true,
+  },
+  gyroY: {
+    type: Number,
+    required: true,
+  },
+  gyroZ: {
+    type: Number,
+    required: true,
+  },
+  latitude: {
+    type: Number,
+    required: true,
+  },
+  longitude: {
+    type: Number,
+    required: true,
+  },
+  speed: {
+    type: Number,
+    required: true,
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now, // Automatically set the current timestamp
+  },
+});
+
 const User = mongoose.model("User", userSchema);
 const Instance = mongoose.model("Instance", instanceSchema);
 const Challan = mongoose.model("Challan", challanSchema);
+const SensorData = mongoose.model("SensorData", sensorDataSchema);
 
-export { User, Instance, Challan };
+export { User, Instance, Challan, SensorData };

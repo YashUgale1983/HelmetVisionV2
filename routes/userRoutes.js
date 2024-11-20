@@ -4,6 +4,7 @@ import {
   emergencyContacts,
   getAllChallans,
   getAllInstances,
+  sensorData,
   userExists,
 } from "../controllers/userController.js";
 
@@ -14,5 +15,6 @@ router.get("/getAllInstances", getAllInstances);
 router.get("/getAllChallans", getAllChallans);
 router.get("/userExists", userExists);
 router.post("/getEmergencyContacts", emergencyContacts);
+router.post("/sensorData/:userUniqueKey", sensorData);
 
 export default router;

@@ -26,6 +26,11 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+  next(); // Pass the request to the next handler
+});
+
 /* Routes */
 app.use("/auth", authRouter);
 app.use("/user", userRouter);

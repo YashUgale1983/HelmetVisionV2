@@ -9,6 +9,10 @@ mongoose.connect(process.env.MONGO_URL).then(() => {
   console.log("DB connection successful !!!");
 });
 
+// const server = app.listen(PORT, "192.168.244.181", () => {
+//   console.log("Server set up at port : " + PORT);
+// });
+
 const server = app.listen(PORT, () => {
   console.log("Server set up at port : " + PORT);
 });
